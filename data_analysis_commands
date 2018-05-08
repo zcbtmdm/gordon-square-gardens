@@ -1,0 +1,58 @@
+# The following is a list of 
+# QIIME commands for data analysis.
+
+
+### Summary of BIOM table:
+
+biom summarize-table -i gordon_square_otu_table.biom -o gordon_square_summary.txt
+
+biom summarize-table -i central_park_otu_table.biom -o central_park_summary.txt
+
+biom summarize-table -i merged_otu_table.biom -o merged_summary.txt
+
+
+### Core diversity analyses:
+
+core_diversity_analyses.py -i gordon_square_otu_table.biom -o gordon_square_diversity_analysis -m gordon_square_map.tsv -t ~/SILVA_128_QIIME_release/trees/97/97_otus.tre --recover_from_failure -e 627
+
+core_diversity_analyses.py -i gordon_square_otu_table.biom -o gordon_square_diversity_analysis -m gordon_square_map.tsv -t ~/SILVA_128_QIIME_release/trees/97/97_otus.tre --recover_from_failure -e 34336
+
+core_diversity_analyses.py -i central_park_otu_table.biom -o central_park_diversity_analysis -m central_park_map.tsv -t ~/SILVA_128_QIIME_release/trees/97/97_otus.tre --recover_from_failure -e 28129
+
+
+### Compare categories:
+
+compare_categories.py --method_anosim -i unweighted_unifrac_dm.txt -m gordon_square_map.tsv -c SampleNitrogen -o nitrogen -n 999
+
+compare_categories.py --method_anosim -i unweighted_unifrac_dm.txt -m gordon_square_map.tsv -c SamplePhosphorus -o phosphorus -n 999
+
+compare_categories.py --method_anosim -i unweighted_unifrac_dm.txt -m gordon_square_map.tsv -c SamplePotassium -o potassium -n 999
+
+compare_categories.py --method_anosim -i unweighted_unifrac_dm.txt -m gordon_square_map.tsv -c SamplePh -o pH -n 999
+
+
+### Summarising taxa:
+
+summarize_taxa.py -i gordon_square_otu_table.biom -o gordon_square_taxa_2.5 -u 0.025
+
+summarize_taxa.py -i central_park_otu_table.biom -o central_park_taxa_2.5 -u 0.025
+
+
+### Plotting taxa summary by class:
+
+plot_taxa_summary.py -i otu_table_L3.txt -o class_taxa_plots_2.5
+
+
+### Statistical tests (Merged data):
+
+	# Adonis
+
+	compare_categories.py --method adonis -i unweighted_unifrac_dm.txt -m merged_map.tsv -c sample_center -o adonis_28129
+
+	# ANOSIM
+
+	compare_categories.py --method anosim -i unweighted_unifrac_dm.txt -m merged_map.tsv -c sample_center -o anosim_28129
+
+### Making distance boxplots:
+
+make_distance_boxplots.py -m merged_map.tsv -o boxplots -d unweighted_unifrac_dm.txt -f sample_center -n 999 --save_raw_data --suppress_all_between
