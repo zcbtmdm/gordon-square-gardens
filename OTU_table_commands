@@ -1,0 +1,55 @@
+# The following is a list of 
+# QIIME commands for producing a closed-reference OTU table
+# starting from the raw, multiplexed Gordon Square Gardens sequence data.
+
+
+### Joined paired ends:
+
+join_paired_ends.py -m SeqPrep -f Read1.fastq -r Read2.fastq -b Index.fastq -o joined_gordon_square
+
+
+### Splitting libraries:
+
+split_libraries_fastq.py -i seqprep_assembled.fastq.gz -b seqprep_assembled.fastq_barcodes.fastq -m gordon_square_map.tsv -o split_gordon_square_q20 --rev_comp_barcode --rev_comp_mapping_barcodes -q 19
+
+
+### Picking closed reference OTUs:
+
+pick_closed_reference_otus.py -i seqs.fna -r ~/SILVA_128_QIIME_release/rep_set/rep_set_16S_only/97/97_otus_16S.fasta -t ~/SILVA_128_QIIME_release/taxonomy/16S_only/97/consensus_taxonomy_all_levels.txt -o closed_otus_gordon_square
+
+
+
+# The following is a list of 
+# QIIME commands for producing a closed-reference OTU table
+# starting from the raw, de-multiplexed Central Park sequence data.
+
+
+### Splitting libraries:
+
+split_libraries_fastq.py -i ERR542777.fastq,ERR542778.fastq,ERR542779.fastq,ERR542780.fastq,ERR542781.fastq,ERR542782.fastq,ERR542783.fastq,ERR542784.fastq,ERR542785.fastq,ERR542786.fastq,ERR542787.fastq,ERR542788.fastq,ERR542789.fastq,ERR542790.fastq,ERR542791.fastq,ERR542792.fastq,ERR542793.fastq,ERR542794.fastq,ERR542795.fastq,ERR542796.fastq,ERR542797.fastq,ERR542798.fastq,ERR542799.fastq,ERR542800.fastq,ERR542801.fastq,ERR542802.fastq,ERR542803.fastq,ERR542804.fastq,ERR542805.fastq,ERR542806.fastq --sample_ids 2104.CP1,2104.CP10,2104.CP100,2104.CP101,2104.CP102,2104.CP103,2104.CP104,2104.CP105,2104.CP106,2104.CP107,2104.CP108,2104.CP109,2104.CP11,2104.CP110,2104.CP111,2104.CP112,2104.CP113,2104.CP114,2104.CP115,2104.CP116,2104.CP117,2104.CP118,2104.CP119,2104.CP12,2104.CP120,2104.CP121,2104.CP122,2104.CP123,2104.CP124,2104.CP125 --barcode_type not-barcoded --phred_offset 33 -m central_park_map.tsv -o split_central_park_q20 -q 19
+
+
+### Picking closed reference OTUs:
+
+pick_closed_reference_otus.py -i seqs.fna -r ~/SILVA_128_QIIME_release/rep_set/rep_set_16S_only/97/97_otus_16S.fasta -t ~/SILVA_128_QIIME_release/taxonomy/16S_only/97/consensus_taxonomy_all_levels.txt -o closed_otus_central_park
+
+
+
+# The following is a list of 
+# QIIME commands for producing a merged closed-reference
+# OTU table starting from separate OTU tables.
+
+
+### Merging mapping files:
+
+merge_mapping_files.py -m central_park_map.tsv,gordon_square_map.tsv -o merged_map.tsv -n 'Data not collected'
+
+
+### Validating mapping file:
+
+validate_mapping_file.py -m merged_map.tsv -o validate_map
+
+
+### Merging OTU tables:
+
+merge_otu_tables.py -i gordon_square_otu_table.biom,central_park_otu_table.biom -o merged_otu_table.biom
